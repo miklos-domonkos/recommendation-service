@@ -1,0 +1,8 @@
+logging:
+  level:
+    com:
+      mdomonkos:
+        crypto: DEBUG
+
+  jpa:
+    show-sql: true
