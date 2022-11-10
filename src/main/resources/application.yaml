@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: crypto
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 50
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/recommendation-storage?currentSchema=crypto&reWriteBatchedInserts=true
+    username: ${POSTGRES_USER:root}
+    password: ${POSTGRES_PASSWORD:root}
+
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false

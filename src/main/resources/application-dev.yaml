@@ -1,0 +1,13 @@
+server:
+  port: 8089
+
+logging:
+  level:
+    com:
+      mdomonkos:
+        crypto: DEBUG
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
