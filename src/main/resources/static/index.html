@@ -10,11 +10,23 @@
 <body>
 
 <div>
-    <h1>Single File Upload Demo!</h1>
-    <form action="upload/file/single" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label >Single</label>
-            <input type="file" name="fileToUpload" id="fileToUpload1">
+    <h1>Single File Upload</h1>
+    <form action="import/file" method="post" enctype="multipart/form-data">
+        <div>
+            <label>Single</label>
+            <input type="file" name="file" id="file">
+        </div>
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+<div>
+    <h1>Multi File Upload</h1>
+    <form action="import/files" method="post" enctype="multipart/form-data">
+        <div>
+            <label>Single</label>
+            <input type="file" name="files" id="files" multiple>
         </div>
         <div>
             <button type="submit">Submit</button>

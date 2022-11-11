@@ -1,4 +1,4 @@
-package com.mdomonkos.crypto.recommendation.service.service;
+package com.mdomonkos.crypto.recommendation.service.upload.service;
 
 import com.mdomonkos.crypto.recommendation.service.exception.UploadFailedException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Uploads source to temporary file.
@@ -22,7 +25,7 @@ import java.util.Objects;
 public class TempFileUploadService {
   /**
    * Uploads source to temporary file.
-   *
+   * <p>
    * Cleans up temporary file on error.
    *
    * @param source Source to upload
@@ -49,9 +52,31 @@ public class TempFileUploadService {
       }
       throw new UploadFailedException("File upload failed");
     }
+
   }
 
-  private void deleteFile(String fileLocation) {
+  public List<String> upload(List<? extends InputStreamSource> sources) throws UploadFailedException {
+    List<Exception> exceptions = new ArrayList<>();
+    List<String> tempFiles = sources.stream()
+                                    .map(source -> {
+                                           try {
+                                             return upload(source);
+                                           } catch (UploadFailedException e) {
+                                             exceptions.add(e);
+                                             return null;
+                                           }
+                                         }
+                                    )
+                                    .collect(Collectors.toList());
+    if (exceptions.size() == 0) {
+      return tempFiles;
+    } else {
+      tempFiles.forEach(TempFileUploadService::deleteFile);
+      throw new UploadFailedException("Files upload failed");
+    }
+  }
+
+  private static void deleteFile(String fileLocation) {
     try {
       Files.deleteIfExists(Paths.get(fileLocation));
     } catch (Exception e) {
