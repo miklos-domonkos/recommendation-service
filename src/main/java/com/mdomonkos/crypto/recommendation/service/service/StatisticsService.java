@@ -3,8 +3,11 @@ package com.mdomonkos.crypto.recommendation.service.service;
 import com.mdomonkos.crypto.recommendation.service.exception.ResourceNotFoundException;
 import com.mdomonkos.crypto.recommendation.service.model.Statistics;
 import com.mdomonkos.crypto.recommendation.service.repository.CryptoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +15,7 @@ import java.util.Objects;
  * Provides statistics about cryptos.
  */
 @Service
+@Slf4j
 public class StatisticsService {
 
   private CryptoRepository cryptoRepository;
@@ -22,7 +26,7 @@ public class StatisticsService {
 
   /**
    * Descending sorted list of all the cryptos,
-   *  comparing the normalized range (i.e. (max-min)/min).
+   * comparing the normalized range (i.e. (max-min)/min).
    *
    * @return The ordered list of cryptos
    */
@@ -35,13 +39,27 @@ public class StatisticsService {
    *
    * @param symbol Symbol of the crypto
    * @return {@link Statistics}
-   * @throws ResourceNotFoundException If no information for the crypto
+   * @throws ResourceNotFoundException If there is no information for the given crypto
    */
   public Statistics getStatistics(String symbol) throws ResourceNotFoundException {
-    Statistics nullableStatistics = cryptoRepository.findStatisticsBySymbol(symbol);
-    if (Objects.isNull(nullableStatistics.getSymbol())) {
+    Statistics statistics = cryptoRepository.findStatisticsBySymbol(symbol);
+    if (Objects.isNull(statistics.getSymbol())) {
       throw new ResourceNotFoundException("No information available for " + symbol);
     }
-    return nullableStatistics;
+    return statistics;
+  }
+
+  /**
+   * Returns crypto with the highest normalized range for a specific day from the starting date/time.
+   *
+   * @param startDateTime
+   * @return The symbol of the recommended crypto
+   * @throws ResourceNotFoundException If there is no information for the given day
+   */
+  public String getCryptoWithHighestNormalizedRangeForDay(Date startDateTime) {
+    Date endDateTime = Date.from(startDateTime.toInstant().plus(Duration.ofDays(1)));
+    return cryptoRepository.getCryptoWithHighestNormalizedRangeForRange(startDateTime, endDateTime)
+                           .orElseThrow(() -> new ResourceNotFoundException(
+                             "No information available for date" + startDateTime));
   }
 }

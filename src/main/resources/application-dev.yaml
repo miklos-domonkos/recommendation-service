@@ -13,5 +13,6 @@ spring:
       ddl-auto: create-drop
 
 rate-limiter:
-  max: 10
+  enabled: false
+  max: 1
   window: 10

@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class InMemoryRateLimiterFilter implements Filter, InitializingBean {
+@ConditionalOnProperty(value = "rate-limiter.enabled", matchIfMissing = true)
+public class InMemoryRateLimiterFilter implements InitializingBean, Filter {
 
   @Value("${rate-limiter.max}")
   private Long MAX_REQUESTS;
@@ -61,7 +63,7 @@ public class InMemoryRateLimiterFilter implements Filter, InitializingBean {
    * Atomically increment the counter.
    * If there was remaining request expire resets
    *
-   * @param clientIpAddress
+   * @param clientIpAddress ip of the client
    * @return if there was remaining request
    */
   private boolean isMaximumRequestsPerSecondExceed(String clientIpAddress) {
