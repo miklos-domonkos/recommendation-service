@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  recommendation-service:
+    image: recommendation-service:0.0.1-SNAPSHOT
+    ports:
+      - 8091:8080    
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: postgres
+    depends_on:
+      - postgres    

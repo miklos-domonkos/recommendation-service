@@ -9,7 +9,10 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
@@ -25,15 +28,29 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Spring batch config to import cvs job.
+ */
 @Configuration
 @ConditionalOnProperty(value = "batch.enabled", matchIfMissing = true)
 @EnableBatchProcessing
 public class SpringBatchConfig {
 
   private static final int LINES_TO_SKIP = 1;
+
+  @Bean
+  public JobLauncher asyncJobLauncher(JobRepository jobRepository) throws Exception {
+
+    SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+    jobLauncher.setJobRepository(jobRepository);
+    jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor());
+    jobLauncher.afterPropertiesSet();
+    return jobLauncher;
+  }
 
   @Bean
   public Job job(JobBuilderFactory jobBuilderFactory,
@@ -82,11 +99,11 @@ public class SpringBatchConfig {
     lineTokenizer.setDelimiter(",");
     lineTokenizer.setStrict(false);
     lineTokenizer.setNames(new String[] {"timestamp", "symbol", "price"});
+    defaultLineMapper.setLineTokenizer(lineTokenizer);
 
     BeanWrapperFieldSetMapper<CryptoRaw> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
     fieldSetMapper.setTargetType(CryptoRaw.class);
 
-    defaultLineMapper.setLineTokenizer(lineTokenizer);
     defaultLineMapper.setFieldSetMapper(fieldSetMapper);
 
     return defaultLineMapper;

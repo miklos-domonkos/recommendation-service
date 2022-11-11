@@ -19,6 +19,10 @@ spring:
 
   batch:
     jdbc:
-      initialize-schema: always
+      initialize-schema: always # TODO provide initialization script?
     job:
       enabled: false
+
+rate-limiter:
+  max: 100
+  window: 1

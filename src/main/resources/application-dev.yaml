@@ -6,8 +6,12 @@ logging:
     com:
       mdomonkos:
         crypto: DEBUG
-
+spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+
+rate-limiter:
+  max: 10
+  window: 10

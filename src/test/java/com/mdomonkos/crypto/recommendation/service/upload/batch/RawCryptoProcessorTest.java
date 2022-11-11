@@ -8,9 +8,9 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProcessorTest {
+class RawCryptoProcessorTest {
 
-  private final Processor processor = new Processor();
+  private final RawCryptoProcessor rawCryptoProcessor = new RawCryptoProcessor();
 
   @Test
   public void converts_raw_data_to_entity() throws Exception {
@@ -19,7 +19,7 @@ class ProcessorTest {
     Crypto expected = new Crypto(new Crypto.CryptoId("A", new Date(2L)), 1.1);
 
     // when
-    Crypto result = processor.process(raw);
+    Crypto result = rawCryptoProcessor.process(raw);
 
     //then
     assertEquals(expected, result);

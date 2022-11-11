@@ -1,6 +1,7 @@
 package com.mdomonkos.crypto.recommendation.service.testconfig;
 
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -10,6 +11,9 @@ public class MockSpringBatchConfiguration {
 
   @MockBean
   public JobLauncher jobLauncher;
+
+  @MockBean
+  public JobExplorer JobExplorer;
 
   @MockBean
   public Job job;
