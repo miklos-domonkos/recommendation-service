@@ -52,7 +52,6 @@ public class RecommendationController {
   @Operation(summary = "Returns statistics for the requested crypto")
   @GetMapping("cryptos/{symbol}/statistics")
   public Statistics statistics(@PathVariable("symbol") @NotBlank String symbol) {
-    log.info(symbol);
     return statisticsService.getStatistics(symbol);
   }
 
