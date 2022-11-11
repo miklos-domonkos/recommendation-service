@@ -2,23 +2,22 @@ version: '3.7'
 
 volumes:
   pg_data:
-#    external: true 
     name: pg_data
   pgadmin_data:
-#    external: true 
-    name: pgadmin_data
+    name: pgadmin_data  
 
 services:
   postgres:
     image: postgres
     restart: always
     environment:
-      POSTGRES_DB: test
+      POSTGRES_DB: recommendation-storage
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - ./initpostgre.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
   
