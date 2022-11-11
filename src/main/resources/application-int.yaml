@@ -4,8 +4,6 @@ logging:
       mdomonkos:
         crypto: DEBUG
 
-  jpa:
-    show-sql: true
 spring:
   jpa:
     show-sql: true

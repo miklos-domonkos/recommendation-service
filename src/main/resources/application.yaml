@@ -19,7 +19,7 @@ spring:
 
   batch:
     jdbc:
-      initialize-schema: always # TODO provide initialization script?
+      initialize-schema: always
     job:
       enabled: false
 
