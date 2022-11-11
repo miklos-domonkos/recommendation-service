@@ -52,7 +52,7 @@ public class StatisticsService {
   /**
    * Returns crypto with the highest normalized range for a specific day from the starting date/time.
    *
-   * @param startDateTime
+   * @param startDateTime the starting date/time
    * @return The symbol of the recommended crypto
    * @throws ResourceNotFoundException If there is no information for the given day
    */
